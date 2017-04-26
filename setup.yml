@@ -14,55 +14,39 @@
       apt: > 
         upgrade=yes
  
+    - name: Add the archive's GPG key get
+      get_url:
+        url: https://apt.mopidy.com/mopidy.gpg
+        dest: /tmp/mopidy.gpg
+    - name: Add the archive's GPG key execute
+      command: apt-key add /tmp/mopidy.gpg
+
+    - name: Update the repository cache and update package "mopidy" to latest version using default release squeeze-backport
+      apt:
+        name: mopidy
+        state: latest
+        update_cache: yes
+
     - name: Install list of packages
       action: apt pkg={{item}} state=installed
       with_items:
-        - samba
-        - samba-common-bin
+        - mopidy
 
-    - name: /etc/samba/smb.conf 1
-      lineinfile:
-        path: /etc/samba/smb.conf
-        line: 'workgroup = revenberg'
-
-    - name: /etc/samba/smb.conf 2
-      lineinfile:
-        path: /etc/samba/smb.conf
-        line: 'wins support = yes'
-
-    - name: insert/update "Match User" configuration block in /etc/ssh/sshd_config
-      blockinfile:
-        path: /etc/samba/smb.conf 
-        block: |
-          [pihome]
-             comment= Pi Home
-             path=/home/pi
-             browseable=Yes
-             writeable=Yes
-             only guest=no
-             create mask=0777
-             directory mask=0777
-             public=yes
-          [usb0]
-             comment=usb0
-             path=/media/usb0
-             browseable=Yes
-             writeable=Yes
-             read only = no
-             only guest=no
-             create mask=0777
-             directory mask=0777
-             public=yes
-             force user = pi
-          [usb1]
-             comment=usb1
-             path=/media/usb1
-             browseable=Yes
-             writeable=Yes
-             read only = no
-             only guest=no
-             create mask=0777
-             directory mask=0777
-             public=yes
-             force user = pi
-      
+    - name: Install list of pip packages
+      action: pip name={{item}}
+      with_items:
+        - mopidy_MFE 
+        - Mopidy-CarPi 
+        - Mopidy-jukePi 
+        - Mopidy-Auto 
+        - Mopidy-WebSettings 
+        - Mopidy-Terminal 
+        - Mopidy-MusicBox-Webclient
+        - Mopidy-Moped
+        - Mopidy-Simple-Webclient
+        - Mopidy-Mobile
+        - Mopidy-API-Explorer
+        - Mopidy-WebLibrary
+        - Mopidy-AlarmClock
+        - Mopidy-PlaybackDefaults
+        - Mopidy-Material-Webclient
