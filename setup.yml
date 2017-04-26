@@ -50,3 +50,14 @@
         - Mopidy-AlarmClock
         - Mopidy-PlaybackDefaults
         - Mopidy-Material-Webclient
+    - name: mopidy.conf
+      copy:
+        src: ./mopidy.conf
+        dest: /etc/mopidy/mopidy.conf
+    - name: mopidy local scan
+      command: mopidy local scan
+
+    - name: mopidy start service 
+      service: 
+        name: mopidy
+        state: started
